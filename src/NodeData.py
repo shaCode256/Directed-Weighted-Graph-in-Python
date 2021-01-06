@@ -1,6 +1,5 @@
 # import self as self
 
-
 class NodeData:
     """ This abstract class represents a Node (a component of a graph) """
     key = 0
@@ -13,6 +12,7 @@ class NodeData:
     visited = "false"
     tagB = 0.0
     color = ""
+    pos= ()
 
     def __init__(self):
         self.key = self.counter
@@ -20,6 +20,13 @@ class NodeData:
         """
           Constructor for NodeData. the key is defined by a general counter.
         """
+
+    def __repr__(self):
+        return str(self.key) + ", " + str(self.pos)
+    """
+    Tostring method
+    """
+
 
     def setkey(self, key: int):  # replaces the constructor NodeData(int key) in previous project
         self.key = key
@@ -92,10 +99,10 @@ class NodeData:
     @return
     """
 
-    def setTag(self, t):
+    def setTag(self, t: float):
         self.tag = t
 
-    # distance of weight, """"""whats the weight in the shortest path from the src up until this one (to dest)
+    # distance of weight, the weight in the shortest path from the src up until this one (to dest)
 
     """
     Allows setting the "tag" value for temporal marking an node - common
@@ -124,12 +131,14 @@ class NodeData:
     @param t - the new value of the tag
     """
 
-    def toString(self):
-        return "NodeDatakey=" + self.key + ''
 
-    """
-    Tostring method
-    """
+
+    # def toString(self):
+    #     return "NodeDatakey=" + self.key + ''
+    #
+    # """
+    # Tostring method
+    # """
 
     def setDub(self, e):
         self.dub = e
