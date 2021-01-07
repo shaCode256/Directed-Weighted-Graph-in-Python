@@ -204,10 +204,17 @@ class GraphAlgo(GraphAlgoInterface):
     """
 
     def connected_component(self, id1: int) -> list:
-        list = self.connected_components()
-        for l in list:
-            if id1 in list:
-                return list
+        if self.sccList:
+            self.sccList.clear()  # to prevent having past calculations
+        myList = self.connected_components()
+        for component in myList:
+            for node in component:
+                if id1 == node.getKey():
+                    return component
+
+
+ #           la is  [8, (1, 1, 1)]
+#Connected components of node 8 are:  [8, (1, 1, 1)]
 
         """
         Finds the Strongly Connected Component(SCC) that node id1 is a part of.
@@ -274,8 +281,8 @@ class GraphAlgo(GraphAlgoInterface):
                 scc = []
                 scc = self.DFSVISITTropoligic(G, vertex, scc)
                 if scc:
-                     print("did we")
-                     self.sccList.append(scc)
+                    print("did we")
+                    self.sccList.append(scc)
         return self.sccList
 
     """dfs implementation on the tropolical list of nodes- first part"""
@@ -306,7 +313,7 @@ class GraphAlgo(GraphAlgoInterface):
                     scc.append(v)
         else:
             if not Ga.all_in_edges_of_node(vertex.key):
-                scc.append(vertex)  #to add lonely vertices
+                scc.append(vertex)  # to add lonely vertices
         if scc:  # if the list of components is not empty
             print("scc is : ", scc)
             return scc
@@ -315,6 +322,8 @@ class GraphAlgo(GraphAlgoInterface):
         """dfs implementation on the tropolical list of nodes- second part"""
 
     def connected_components(self) -> List[list]:
+        if self.sccList:
+            self.sccList.clear()  # to prevent having past calculations
         self.dfs(self.myGraph)  # makes the tropological sort of nodes
         print("my vertices are ", self.myGraph.get_all_v())
         print("tropological sort is ", self.tropologicalSort)
