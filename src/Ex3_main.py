@@ -72,6 +72,12 @@ def check1():
     g.remove_edge(1, 3)
     g.add_edge(1, 3, 10)
     g.add_node(8, (1,1,1))
+    g.add_node(10, (2,2,2))
+    #g.add_edge(8, 10, 1)
+    #g.add_edge(10, 8, 1)
+
+
+
     g_algo = GraphAlgo(g)  # init NOT empty graph - for the GraphAlgo. INSTEAD OF READING FROM JSON
     # file = "../data/T0.json"
     # g_algo.load_from_json(file) # init a GraphAlgo from a json file

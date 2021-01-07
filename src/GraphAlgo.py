@@ -242,11 +242,14 @@ class GraphAlgo(GraphAlgoInterface):
         vertex.color = "gray"
         print(type(vertex.getKey()))
         print(vertex.getKey())
-        print("the dixt is", G.all_out_edges_of_node(vertex.getKey()))
+        print("the dict is", G.all_out_edges_of_node(vertex.getKey()))
         allOutEdges = G.all_out_edges_of_node(vertex.getKey())
         allNodes = G.get_all_v()
-        if (allOutEdges):
+        print("ggg", G)
+        if allOutEdges:
+            print("hhh", allOutEdges.keys())
             for vint in allOutEdges.keys():
+                print("allNodes", allNodes)
                 v = allNodes.get(vint)
                 if v.color == "white":
                     v.parent = vertex
@@ -301,6 +304,9 @@ class GraphAlgo(GraphAlgoInterface):
                     #    def DFSVISITTropoligic(self, Ga: DiGraph, vertex, scc):
                     self.DFSVISITTropoligic(Ga, v, scc)
                     scc.append(v)
+        else:
+            if not Ga.all_in_edges_of_node(vertex.key):
+                scc.append(vertex)  #to add lonely vertices
         if scc:  # if the list of components is not empty
             print("scc is : ", scc)
             return scc
