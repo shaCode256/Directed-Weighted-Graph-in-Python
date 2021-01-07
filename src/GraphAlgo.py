@@ -1,5 +1,8 @@
-from encodings import undefined
-from tokenize import Double
+import sys
+print("this",sys.getrecursionlimit())
+sys.setrecursionlimit(2400000)
+
+import json
 from typing import List, Collection
 from collections import deque
 from src import GraphAlgoInterface, GraphInterface, DiGraph, NodeData
@@ -36,6 +39,17 @@ class GraphAlgo(GraphAlgoInterface):
         """
 
     def load_from_json(self, file_name: str) -> bool:
+        try:
+            with open(file_name+".json", "r") as file:
+                data = json.load(file)
+            self.__init__()
+            for n in data.get("Nodes"):
+                self.myGraph.add_node(n.get("id"), n.get("pos"))
+            for e in data.get("Edges"):
+                self.myGraph.add_edge(e.get("src"), e.get("dest"), e.get("w"))
+            return True
+        except Exception as e:
+            return False
         """
         Loads a graph from a json file.
         @param file_name: The path to the json file
@@ -43,11 +57,21 @@ class GraphAlgo(GraphAlgoInterface):
         """
 
     def save_to_json(self, file_name: str) -> bool:
-        """
-        Saves the graph in JSON format to a file
-        @param file_name: The path to the out file
-        @return: True if the save was successful, Flase o.w.
-        """
+        if file_name:
+            try:
+                with open(file_name+".json", "w") as file:
+                    json.dump(self.myGraph.as_dict(), indent=4, fp=file)
+                return True
+            except Exception as e:
+                return False
+            else:
+                return False
+
+    """
+    Saves the graph in JSON format to a file
+    @param file_name: The path to the out file
+    @return: True if the save was successful, Flase o.w.
+    """
 
     def shortest_path_a(self, src, dest):
         groupNodes = self.myGraph._nodes  # get and store the graphs' collection of vertices.
@@ -75,7 +99,7 @@ class GraphAlgo(GraphAlgoInterface):
 
         groupNodesKeys = groupNodes.keys()
         for key in groupNodesKeys:  # initializing- prepearing the nodes for the proccess.
-            print("key is", key)
+            #print("key is", key)
             # print("type is ", self.myGraph.get_all_v().get(0))
 
             # {0: {@343534536}}
@@ -119,7 +143,7 @@ class GraphAlgo(GraphAlgoInterface):
 
             q.remove(minNode)
             # for every neighbor of minKey= neinode
-            print("luli", self.myGraph)
+            #print("luli", self.myGraph)
             if (self.myGraph.all_out_edges_of_node(minKey)):
                 for key in self.myGraph.all_out_edges_of_node(
                         minKey).keys():  # where v has not yet been removed from Q.
@@ -130,10 +154,10 @@ class GraphAlgo(GraphAlgoInterface):
                     # which is the DEST in the edge between MINKEY and DEST.
                     if (neinode in q):  # where v has not yet been removed from Q.#if it contains the neighbor node
                         #   if(getGraph().getEdge(edge.getKey(), minKey)!=-1)  should be^^ for
-                        print("nnn", self.myGraph.all_out_edges_of_node(minKey))
-                        print("lll", neinode)
-                        print(type(neinode))
-                        print("pupu", self.myGraph.all_out_edges_of_node(minKey).get(key))
+                        # print("nnn", self.myGraph.all_out_edges_of_node(minKey))
+                        # print("lll", neinode)
+                        # print(type(neinode))
+                        # print("pupu", self.myGraph.all_out_edges_of_node(minKey).get(key))
                         dist = minDist + self.myGraph.all_out_edges_of_node(minKey).get(key)
                         # getEdge(minKey, neinode.getKey()).getWeight()  # alt = dist[u] + dist_between(u, v) #check
                         if (dist < neinode.getTagB()):
@@ -173,7 +197,7 @@ class GraphAlgo(GraphAlgoInterface):
         """returns the length of the shortest path between src to dest"""
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        print("achu ", self.myGraph)
+        #print("achu ", self.myGraph)
         nodesList = self.shortest_path_a(id1, id2)
         dist = self.shortest_path_dist(id1, id2)
         return dist, nodesList
@@ -183,7 +207,6 @@ class GraphAlgo(GraphAlgoInterface):
         NodeData.counter = 0
         for nd in graph.get_all_v():  # Reverse the original graph
             nodeToCopy = graph.get_all_v().get(nd)
-            print("nd is ", nd)
             reversedGraph.add_node(nd, nodeToCopy.pos)  # add the nodes to the new graph
         for nd in graph.get_all_v():  # Reverse the original graph
             if graph.all_out_edges_of_node(nd):
@@ -192,9 +215,6 @@ class GraphAlgo(GraphAlgoInterface):
                     dest = key
                     weight = graph.all_out_edges_of_node(nd).get(key)
                     reversedGraph.add_edge(dest, src, weight)
-        print("reversedGraph is :", reversedGraph)
-        print("reveresedGraph edges are :", reversedGraph._edges)
-        print("original graph is :", graph)
         return reversedGraph
 
     """
@@ -212,9 +232,8 @@ class GraphAlgo(GraphAlgoInterface):
                 if id1 == node.getKey():
                     return component
 
-
- #           la is  [8, (1, 1, 1)]
-#Connected components of node 8 are:  [8, (1, 1, 1)]
+        #           la is  [8, (1, 1, 1)]
+        # Connected components of node 8 are:  [8, (1, 1, 1)]
 
         """
         Finds the Strongly Connected Component(SCC) that node id1 is a part of.
@@ -224,17 +243,10 @@ class GraphAlgo(GraphAlgoInterface):
 
     # dfs implementation
     def dfs(self, G: DiGraph):
-        print("got into dfs")
-        print("type is", type(G))
-        print(G.v_size())
-        print(G.get_all_v())
         vertices = G.get_all_v()
-        print("vertices is ", vertices)
         for ver in vertices:
             vertex = NodeData
-            print("hello", type(ver))
             vertex = vertices.get(ver)
-            print("hahaha", type(vertex))
             vertex.color = "white"
             vertex.parent = None
         for ver in vertices:
@@ -245,69 +257,57 @@ class GraphAlgo(GraphAlgoInterface):
     """dfs implementation- first part"""
 
     def DFSVISIT(self, G: DiGraph, vertex: NodeData):
-        print("got into DFSVISIT ")
+        # print("got into DFSVISIT ")
         vertex.color = "gray"
-        print(type(vertex.getKey()))
-        print(vertex.getKey())
-        print("the dict is", G.all_out_edges_of_node(vertex.getKey()))
+        # print(type(vertex.getKey()))
+        # print(vertex.getKey())
+        # print("the dict is", G.all_out_edges_of_node(vertex.getKey()))
         allOutEdges = G.all_out_edges_of_node(vertex.getKey())
         allNodes = G.get_all_v()
-        print("ggg", G)
+        # print("ggg", G)
         if allOutEdges:
-            print("hhh", allOutEdges.keys())
             for vint in allOutEdges.keys():
-                print("allNodes", allNodes)
+                # print("allNodes", allNodes)
                 v = allNodes.get(vint)
                 if v.color == "white":
                     v.parent = vertex
                     self.DFSVISIT(G, v)
         vertex.color = "black"
-        print("tropological", self.tropologicalSort)
+        # print("tropological", self.tropologicalSort)
         self.tropologicalSort.append(vertex)
 
     """dfs implementation- second part"""
 
     def dfsTropologic(self, G: DiGraph):
         for vertex in self.tropologicalSort:
-            print("got into dfsTropologic ")
+            # print("got into dfsTropologic ")
             vertex.color = "white"
             vertex.parent = None
             G.get_all_v().get(vertex.key).color = "white"
             G.get_all_v().get(vertex.key).parent = None
         for vertex in self.tropologicalSort:
-            print(vertex.color)
+            # print(vertex.color)
             if vertex.color == "white":
                 print("key is", vertex.key, " want it to be 8")
                 scc = []
                 scc = self.DFSVISITTropoligic(G, vertex, scc)
                 if scc:
-                    print("did we")
+                    # print("did we")
                     self.sccList.append(scc)
         return self.sccList
 
     """dfs implementation on the tropolical list of nodes- first part"""
 
     def DFSVISITTropoligic(self, Ga: DiGraph, vertex, scc):
-        print("lucky", vertex)
-        print("luckytype", type(Ga))
-        #       print(Ga.all_out_edges_of_node(vertex.key))
-        print("shouldbeNodeData:", type(vertex))
         vertex.color = "gray"
-        # print("hana ", G.all_out_edges_of_node(vertex.key))
         allOut = {}
-        print(Ga)
         allOut = Ga.all_out_edges_of_node(vertex.key)
         allNodes = Ga.get_all_v()
-        print("pupa")
         if allOut:
-            print("nuka")
             for vin in allOut.keys():
                 v = allNodes.get(vin)  # get the NodeData
-                print("I got in")
                 if v.color == "white":
-                    print("papa")
                     v.parent = vertex
-                    print("Ga type is ", type(Ga))
                     #    def DFSVISITTropoligic(self, Ga: DiGraph, vertex, scc):
                     self.DFSVISITTropoligic(Ga, v, scc)
                     scc.append(v)
@@ -315,7 +315,6 @@ class GraphAlgo(GraphAlgoInterface):
             if not Ga.all_in_edges_of_node(vertex.key):
                 scc.append(vertex)  # to add lonely vertices
         if scc:  # if the list of components is not empty
-            print("scc is : ", scc)
             return scc
         vertex.color = "black"
 
@@ -325,12 +324,8 @@ class GraphAlgo(GraphAlgoInterface):
         if self.sccList:
             self.sccList.clear()  # to prevent having past calculations
         self.dfs(self.myGraph)  # makes the tropological sort of nodes
-        print("my vertices are ", self.myGraph.get_all_v())
-        print("tropological sort is ", self.tropologicalSort)
-        print("maGraph is ", self.myGraph)
         reveredGraph = self.reverse_graph(self.myGraph)
         self.dfsTropologic(reveredGraph)
-        print("sccList is: ", self.sccList)
         return self.sccList
         #  self.kosaraju(self, self.myGraph)
         """

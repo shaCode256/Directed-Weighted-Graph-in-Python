@@ -26,7 +26,7 @@ def check():
         """
 
     #TOCHECK : CHECK0 INTERFEERS WITHCHECK 1
-    check0()
+#    check0()
     check1()
 #    check2()
 
@@ -76,13 +76,14 @@ def check1():
     #g.add_edge(8, 10, 1)
     #g.add_edge(10, 8, 1)
 
-
-
-    g_algo = GraphAlgo(g)  # init NOT empty graph - for the GraphAlgo. INSTEAD OF READING FROM JSON
-    # file = "../data/T0.json"
-    # g_algo.load_from_json(file) # init a GraphAlgo from a json file
-    print("Connected components are: ", g_algo.connected_components())
-    print("Connected components of node 0 are: ", g_algo.connected_component(0))
+    g_algo = GraphAlgo()  # init NOT empty graph - for the GraphAlgo. INSTEAD OF READING FROM JSON
+    file = "G_30000_240000_0"
+    g_algo.load_from_json(file) # init a GraphAlgo from a json file
+    print("load is done")
+    print("loaded graph is ", g_algo.get_graph())
+    g_algo.connected_components()
+    #print("Connected components are: ", g_algo.connected_components())
+    #print("Connected components of node 0 are: ", g_algo.connected_component(0))
 
     #should be:
     # 0,1,2,3

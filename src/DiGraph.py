@@ -4,7 +4,6 @@ from src.NodeData import NodeData
 from src.GraphInterface import GraphInterface
 
 
-
 class DiGraph(GraphInterface):
     """This class represents a graph."""
     global _nodes
@@ -98,7 +97,7 @@ class DiGraph(GraphInterface):
             if self._nodes.get(i).pos == pos:
                 return False
         n = NodeData()
-        n.setkey(node_id) #to make sure the added node has the same key as we want it to have
+        n.setkey(node_id) # to make sure the added node has the same key as we want it to have
         # node_dict = {"node":NodeData()}
         if pos is None:
             x, y = random.uniform(0, 50), random.uniform(0, 50)
@@ -162,5 +161,49 @@ class DiGraph(GraphInterface):
     def __repr__(self):
         rep_graph = {"Edges": self._edges, "Nodes": self._nodes}
         return str(rep_graph)
-
     """ ToString methode """
+
+    def as_dict(self) -> dict:
+        our_graph = {}
+        list_edges = []
+        list_nodes = []
+        for src in self._edges.keys():
+            for dest in self._edges.get(src).keys():
+                list_edges.append({"src":src,"w":self._edges.get(src).get(dest),"dest":dest})
+        our_graph["Edges"] = list_edges
+        for id in self._nodes.keys():
+            list_nodes.append({"pos":str(self._nodes.get(id).pos[0])+","+str(self._nodes.get(id).pos[1])+","+str(0),"id":id})
+        our_graph["Nodes"] = list_nodes
+        return our_graph
+    """ The methode arranges the graph, by our demand (as json format) """
+
+    def set_mc(self):
+        self._mc = 0
+    """Initialization the number of changes"""
+
+    def __eq__(self, other) -> bool:
+        if (not isinstance(other, DiGraph)):
+            return False
+        if self.v_size()!=other.v_size() or self.v_size()!=other.v_size():
+            return False
+        for k in self._nodes.keys():
+            if k not in other._nodes.keys():
+                return False
+            if self.as_dict().get("Nodes")[k].get("pos") == other.as_dict().get("Nodes")[k].get("pos"):
+                return False
+        if len(self._edges) != len(other._edges):
+            return False
+        for src in self._edges.keys():
+            if src not in other._edges.keys():
+                return False
+            if len(self._edges.get(src)) != len(other._edges.get(src)):
+                return False
+            for dest in self._edges.get(src).keys():
+                if dest not in other._edges.get(src).keys():
+                    return False
+                if self._edges.get(src).get(dest) != self._edges.get(src).get(dest):
+                    return False
+        return True
+
+    """ The methode compares between 2 graphs, by the keys of nodes and their position, and by the pairs (src, dest) of edges and their weights"""
+
