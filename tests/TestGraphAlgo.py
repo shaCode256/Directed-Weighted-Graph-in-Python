@@ -32,6 +32,12 @@ class MyTestCase(unittest.TestCase):
         #self.assertEqual(True, False)
         print("graph is", self.graph.get_all_v())
         print("graph size is", self.graph.v_size())
+        vertices= self.graph.get_all_v()
+        print("boom", vertices)
+        for ver in vertices:
+            print("hello",type(ver))
+            vertex = vertices.get(ver)
+            print("hahaha", type(vertex))
       #  print("pupu", self.graph.all_out_edges_of_node(1).get(3))
 
     def test_getGraph(self):
