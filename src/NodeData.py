@@ -13,6 +13,7 @@ class NodeData:
     tagB = 0.0
     color = ""
     pos= ()
+    time = 0.0
 
     def __init__(self):
         self.key = self.counter

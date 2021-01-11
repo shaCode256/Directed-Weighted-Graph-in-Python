@@ -1,6 +1,4 @@
 import unittest
-
-from src.DiGraph import DiGraph
 from src.NodeData import NodeData
 
 
@@ -10,7 +8,7 @@ from src.NodeData import NodeData
 
 class MyTestCase(unittest.TestCase):
 
-    def setUp(self):  # initializes the nodes counter before each test to be 0.
+    def setUp(self): #initalizes the nodes counter before each test to be 0.
         NodeData.counter = 0;
 
     def test_creatingNewNodeAndGetKey(self):
@@ -122,8 +120,9 @@ class MyTestCase(unittest.TestCase):
     """
 
     def setCounter(self):
-        NodeData.setCounter(300)
-        self.assertEqual(NodeData.counter, 300)
+        node1 = NodeData()
+        node1.setCounter(300)
+        self.assertEqual(node1.counter, 300)
 
     """
     This function tests the setConuter function in NodeData.

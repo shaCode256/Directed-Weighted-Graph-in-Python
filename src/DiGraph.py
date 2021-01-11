@@ -4,6 +4,7 @@ from src.NodeData import NodeData
 from src.GraphInterface import GraphInterface
 
 
+
 class DiGraph(GraphInterface):
     """This class represents a graph."""
     global _nodes
@@ -97,14 +98,17 @@ class DiGraph(GraphInterface):
             if self._nodes.get(i).pos == pos:
                 return False
         n = NodeData()
-        n.setkey(node_id) # to make sure the added node has the same key as we want it to have
+        n.setkey(node_id) #to make sure the added node has the same key as we want it to have
         # node_dict = {"node":NodeData()}
         if pos is None:
             x, y = random.uniform(0, 50), random.uniform(0, 50)
             tupp = (x, y, 0)
             n.pos = tupp
         else:
-            n.pos = pos
+            if type(pos) is str:
+                n.pos = eval(pos)
+            else:
+                n.pos = pos
         self._nodes[node_id] = n
         self._mc += 1
         return True
@@ -189,7 +193,7 @@ class DiGraph(GraphInterface):
         for k in self._nodes.keys():
             if k not in other._nodes.keys():
                 return False
-            if self.as_dict().get("Nodes")[k].get("pos") == other.as_dict().get("Nodes")[k].get("pos"):
+            if self.as_dict().get("Nodes")[k].get("pos") == eval(other.as_dict().get("Nodes")[k].get("pos")):
                 return False
         if len(self._edges) != len(other._edges):
             return False
@@ -206,4 +210,5 @@ class DiGraph(GraphInterface):
         return True
 
     """ The methode compares between 2 graphs, by the keys of nodes and their position, and by the pairs (src, dest) of edges and their weights"""
+
 
