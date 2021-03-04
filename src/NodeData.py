@@ -12,8 +12,8 @@ class NodeData:
     visited = "false"
     tagB = 0.0
     color = ""
+    time = 0
     pos= ()
-    time = 0.0
 
     def __init__(self):
         self.key = self.counter
@@ -132,10 +132,8 @@ class NodeData:
     @param t - the new value of the tag
     """
 
-
-
     # def toString(self):
-    #     return "NodeDatakey=" + self.key + ''
+    #     return "NodeDatakey=" , self.key , ''
     #
     # """
     # Tostring method
